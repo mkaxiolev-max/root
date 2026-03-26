@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ROOT — Know exactly what’s wrong. Instantly.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { background:#0d0d0d; color:#eaeaea; font-family:monospace; padding:40px; max-width:900px; margin:auto; }
+    .box { background:#111; padding:20px; border-radius:10px; margin:20px 0; }
+    .cta { background:#1f1f1f; padding:15px; border-radius:8px; cursor:pointer; border:1px solid #333; }
+    .cta:hover { background:#2a2a2a; }
+    h1 { font-size:30px; margin-bottom:6px; }
+    .muted { color:#aaa; }
+  </style>
+</head>
+<body>
+<h1>ROOT</h1>
+<p class="muted">Know exactly what’s wrong. Instantly.</p>
+
+<div class="box"><pre>ROOT_CAUSE=Missing DATABASE_URL
+FIX=Add it
+DONE_IN=8s</pre></div>
+
+<div class="cta" onclick="copyInstall()">
+<pre id="install">curl -s root.so/install.sh | bash</pre>
+Click to copy install command
+</div>
+
+<div class="box"><pre>Before:
+logs → guessing → retry
+
+After:
+root → answer → done</pre></div>
+
+<div class="box"><pre>Free
+- basic detection
+
+Pro ($29/mo)
+- higher confidence
+- deeper diagnosis
+
+Auto ($99/mo)
+- automatic fixes</pre></div>
+
+<script>
+function copyInstall() {
+  const text = document.getElementById("install").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied install command");
+}
+</script>
+</body>
+</html>
