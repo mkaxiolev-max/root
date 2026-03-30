@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
 set -e
-TMP_FILE="/tmp/root"
+TMP_FILE="/tmp/root_cli"
 INSTALL_PATH="/usr/local/bin/root"
 echo "Installing ROOT..."
-SCRIPT_URL="${ROOT_SCRIPT_URL:-https://raw.githubusercontent.com/YOURNAME/root/main/root.py}"
-curl -L "$SCRIPT_URL" -o "$TMP_FILE"
+curl -sL "https://raw.githubusercontent.com/mkaxiolev-max/root/main/root.py" -o "$TMP_FILE"
 chmod +x "$TMP_FILE"
-if [ -w "/usr/local/bin" ]; then
-  mv "$TMP_FILE" "$INSTALL_PATH"
-else
-  sudo mv "$TMP_FILE" "$INSTALL_PATH"
-fi
+echo "Moving to $INSTALL_PATH (may require password)..."
+sudo mv "$TMP_FILE" "$INSTALL_PATH"
 echo ""
-echo "ROOT installed."
-echo "Run:"
-echo "root"
+echo "ROOT installed. Run: root"
