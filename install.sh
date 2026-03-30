@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -e
-TMP_FILE="/tmp/root_cli"
-INSTALL_PATH="/usr/local/bin/root"
+INSTALL_DIR="$HOME/.local/bin"
+mkdir -p "$INSTALL_DIR"
 echo "Installing ROOT..."
-curl -sL "https://raw.githubusercontent.com/mkaxiolev-max/root/main/root.py" -o "$TMP_FILE"
-chmod +x "$TMP_FILE"
-echo "Moving to $INSTALL_PATH (may require password)..."
-sudo mv "$TMP_FILE" "$INSTALL_PATH"
+curl -sL "https://raw.githubusercontent.com/mkaxiolev-max/root/main/root.py" -o "$INSTALL_DIR/root"
+chmod +x "$INSTALL_DIR/root"
+if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
+  echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+  export PATH="$HOME/.local/bin:$PATH"
+fi
 echo ""
 echo "ROOT installed. Run: root"
