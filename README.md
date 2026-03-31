@@ -6,7 +6,7 @@ State → diagnosis → fix. Zero guessing.
 
 ## Install
 ```bash
-curl -s https://root-jade-kappa.vercel.app/install.sh | bash
+curl -s https://root.axiolev.com/install.sh | bash
 ```
 
 ## Usage
