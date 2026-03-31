@@ -1,82 +1,723 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>ROOT — Know exactly what's wrong. Instantly.</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;min-height:100vh}
-.hero{padding:80px 40px;text-align:center;border-bottom:1px solid #222}
-h1{font-size:48px;letter-spacing:-2px;margin-bottom:16px}
-.sub{color:#888;font-size:18px;margin-bottom:40px}
-.demo{background:#111;border:1px solid #333;padding:24px;border-radius:8px;display:inline-block;text-align:left;margin-bottom:40px;min-width:400px}
-.green{color:#0f0}.yellow{color:#ff0}
-.install{background:#111;border:1px solid #444;padding:16px 24px;border-radius:6px;font-size:16px;display:inline-block}
-.pricing{display:flex;justify-content:center;gap:32px;padding:80px 40px;flex-wrap:wrap}
-.plan{background:#111;border:1px solid #333;border-radius:12px;padding:40px;width:280px}
-.plan.highlight{border-color:#0f0}
-.plan h2{font-size:24px;margin-bottom:8px}
-.price{font-size:36px;color:#0f0;margin:20px 0}
-.period{color:#888;font-size:14px}
-.features{text-align:left;margin:24px 0;list-style:none}
-.features li{padding:8px 0;border-bottom:1px solid #222;font-size:14px}
-.cta{background:#0f0;color:#000;padding:14px 28px;border-radius:6px;font-weight:bold;border:none;width:100%;margin-top:24px;font-size:16px;text-decoration:none;display:block;text-align:center}
-.cta:hover{background:#1f1}
-.cta.secondary{background:transparent;color:#0f0;border:1px solid #0f0}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zeroguess.dev — No more guessing. Ever.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700;800&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #050505;
+      --white: #f5f5f0;
+      --green: #00ff88;
+      --green-dim: #00ff8833;
+      --red: #ff3366;
+      --yellow: #ffd700;
+      --gray: #1a1a1a;
+      --gray-mid: #2a2a2a;
+      --gray-text: #666;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--mono);
+      overflow-x: hidden;
+    }
+
+    /* GRID OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(5,5,5,0.9);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--green);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span { color: var(--white); }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray-text);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 48px 80px;
+      z-index: 1;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--green);
+    }
+
+    h1 {
+      font-family: var(--sans);
+      font-size: clamp(56px, 8vw, 120px);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -3px;
+      margin-bottom: 40px;
+      max-width: 900px;
+    }
+
+    h1 .accent { color: var(--green); }
+    h1 .dim { color: #333; }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--gray-text);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 60px;
+      font-weight: 300;
+    }
+
+    .hero-sub strong { color: var(--white); font-weight: 600; }
+
+    /* TERMINAL DEMO */
+    .terminal {
+      background: var(--gray);
+      border: 1px solid var(--gray-mid);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 600px;
+      margin-bottom: 60px;
+      box-shadow: 0 0 60px rgba(0,255,136,0.05);
+    }
+
+    .terminal-header {
+      background: var(--gray-mid);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green { background: #28c840; }
+
+    .terminal-title {
+      font-size: 12px;
+      color: var(--gray-text);
+      margin-left: 8px;
+    }
+
+    .terminal-body {
+      padding: 24px;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    .t-prompt { color: var(--gray-text); }
+    .t-cmd { color: var(--white); }
+    .t-key { color: var(--gray-text); }
+    .t-val-green { color: var(--green); }
+    .t-val-yellow { color: var(--yellow); }
+    .t-val-red { color: var(--red); }
+    .t-divider { border: none; border-top: 1px solid var(--gray-mid); margin: 12px 0; }
+    .t-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--green);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* CTA ROW */
+    .cta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: var(--black);
+    }
+
+    .btn-primary:hover {
+      background: #00ffaa;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0,255,136,0.25);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--gray-mid);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* DIVIDER */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gray-mid), transparent);
+      margin: 0 48px;
+    }
+
+    /* PRODUCTS */
+    .products {
+      position: relative;
+      z-index: 1;
+      padding: 120px 48px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 64px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--green);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--gray-mid);
+      border: 1px solid var(--gray-mid);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .product-card {
+      background: var(--black);
+      padding: 56px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .product-card:hover { background: #0a0a0a; }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .product-card:hover::before { transform: scaleX(1); }
+
+    .product-number {
+      font-size: 11px;
+      color: var(--gray-text);
+      letter-spacing: 0.1em;
+      margin-bottom: 32px;
+    }
+
+    .product-name {
+      font-family: var(--sans);
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+      color: var(--green);
+    }
+
+    .product-tagline {
+      font-size: 16px;
+      color: var(--white);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .product-desc {
+      font-size: 13px;
+      color: var(--gray-text);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 380px;
+      font-weight: 300;
+    }
+
+    .proof-list {
+      list-style: none;
+      margin-bottom: 48px;
+    }
+
+    .proof-list li {
+      font-size: 12px;
+      color: var(--gray-text);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-mid);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .proof-list li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .price-free {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .price-paid {
+      font-size: 14px;
+      color: var(--gray-text);
+    }
+
+    .price-paid strong {
+      color: var(--green);
+      font-size: 20px;
+    }
+
+    /* STATS */
+    .stats {
+      position: relative;
+      z-index: 1;
+      padding: 80px 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--gray-mid);
+      border-top: 1px solid var(--gray-mid);
+      border-bottom: 1px solid var(--gray-mid);
+    }
+
+    .stat {
+      background: var(--black);
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: var(--sans);
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -2px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ARCHITECTURE */
+    .architecture {
+      position: relative;
+      z-index: 1;
+      padding: 120px 48px;
+    }
+
+    .arch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      margin-top: 64px;
+    }
+
+    .arch-diagram {
+      background: var(--gray);
+      border: 1px solid var(--gray-mid);
+      border-radius: 8px;
+      padding: 32px;
+      font-size: 12px;
+      line-height: 2.2;
+    }
+
+    .arch-layer {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 16px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .arch-layer-root { background: rgba(0,255,136,0.08); border-left: 2px solid var(--green); }
+    .arch-layer-handrail { background: rgba(0,136,255,0.08); border-left: 2px solid #0088ff; }
+    .arch-layer-user { background: rgba(255,255,255,0.04); border-left: 2px solid var(--gray-mid); }
+
+    .arch-arrow {
+      text-align: center;
+      color: var(--gray-text);
+      font-size: 18px;
+      margin: 4px 0;
+    }
+
+    .arch-text h3 {
+      font-family: var(--sans);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .arch-text p {
+      font-size: 13px;
+      color: var(--gray-text);
+      line-height: 1.9;
+      font-weight: 300;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 48px;
+      border-top: 1px solid var(--gray-mid);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--green);
+    }
+
+    .footer-brand span { color: var(--gray-text); font-weight: 400; font-size: 13px; margin-left: 16px; }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 12px;
+      color: var(--gray-text);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--green); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-tag { animation: fadeUp 0.6s ease both; }
+    h1 { animation: fadeUp 0.6s ease 0.1s both; }
+    .hero-sub { animation: fadeUp 0.6s ease 0.2s both; }
+    .terminal { animation: fadeUp 0.6s ease 0.3s both; }
+    .cta-row { animation: fadeUp 0.6s ease 0.4s both; }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .products { padding: 80px 24px; }
+      .products-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); padding: 0; }
+      .architecture { padding: 80px 24px; }
+      .arch-grid { grid-template-columns: 1fr; }
+      footer { padding: 32px 24px; flex-direction: column; gap: 24px; }
+    }
+  </style>
 </head>
 <body>
-<div class="hero">
-<h1>ROOT</h1>
-<p class="sub">Know exactly what's wrong. Instantly.<br>State → Root cause → Fix. Zero guesswork.</p>
-<div class="demo">
-<div style="color:#666;font-size:12px;margin-bottom:8px">$ root</div>
-<div class="green">PROBLEM: Missing DATABASE_URL</div>
-<div class="green">ROOT_CAUSE: .env not loaded</div>
-<div class="green">FIX: Add DATABASE_URL to .env</div>
-<div class="yellow">CONFIDENCE: 97%</div>
-<div class="green">TIME_TO_FIX: 2m</div>
-<div class="green">AUTO_FIX: available</div>
-</div><br>
-<code class="install">curl -s https://root-jade-kappa.vercel.app/install.sh | bash</code>
+
+<nav>
+  <div class="nav-logo">zeroguess<span>.dev</span></div>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="https://github.com/mkaxiolev-max">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Developer infrastructure · Built by AXIOLEV</div>
+  <h1>No more<br><span class="accent">guessing.</span><br><span class="dim">Ever.</span></h1>
+  <p class="hero-sub">
+    Two tools. One principle.<br>
+    <strong>Know exactly what's wrong.</strong> Run exactly what you intended.
+    Zero ambiguity. Zero drift. Zero blame.
+  </p>
+
+  <div class="terminal">
+    <div class="terminal-header">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+      <span class="terminal-title">bash — zeroguess stack</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="t-prompt">$ </span><span class="t-cmd">root</span></div>
+      <hr class="t-divider">
+      <div><span class="t-key">PROBLEM      </span><span class="t-val-red">Missing DATABASE_URL</span></div>
+      <div><span class="t-key">ROOT_CAUSE   </span><span class="t-val-yellow">.env not loaded in runtime</span></div>
+      <div><span class="t-key">FIX          </span><span class="t-val-green">Add DATABASE_URL to .env</span></div>
+      <div><span class="t-key">CONFIDENCE   </span><span class="t-val-green">97%</span></div>
+      <div><span class="t-key">TIME_TO_FIX  </span><span class="t-val-green">2m</span></div>
+      <div><span class="t-key">AUTO_FIX     </span><span class="t-val-green">available →</span></div>
+      <hr class="t-divider">
+      <div><span class="t-prompt">$ </span><span class="t-cmd">handrail run deploy.ops</span></div>
+      <div><span class="t-val-green">✓ 1000/1000 deterministic</span></div>
+      <div><span class="t-val-green">✓ Merkle proof logged</span></div>
+      <div><span class="t-val-green">✓ ABI validated</span></div>
+      <div><span class="t-prompt">$ </span><span class="t-cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <a href="#products" class="btn btn-primary">→ See the tools</a>
+    <a href="https://github.com/mkaxiolev-max" class="btn btn-secondary">⌥ View on GitHub</a>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <span class="stat-number">1000</span>
+    <span class="stat-label">Deterministic runs verified</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">97%</span>
+    <span class="stat-label">Average diagnosis confidence</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">2m</span>
+    <span class="stat-label">Average time to fix</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">0</span>
+    <span class="stat-label">Guesses required</span>
+  </div>
 </div>
-<div class="pricing">
-<div class="plan">
-<h2>Free</h2>
-<div class="price">$0<span class="period">/mo</span></div>
-<ul class="features">
-<li>✅ Basic detection</li>
-<li>✅ Root cause analysis</li>
-<li>✅ 3 pattern types</li>
-<li>❌ Higher confidence</li>
-<li>❌ Auto-fix</li>
-</ul>
-<a class="cta secondary" href="#">Get Started</a>
-</div>
-<div class="plan highlight">
-<h2>Pro</h2>
-<div class="price">$49<span class="period">/mo</span></div>
-<ul class="features">
-<li>✅ Everything in Free</li>
-<li>✅ Higher confidence scoring</li>
-<li>✅ Deeper diagnosis</li>
-<li>✅ Priority patterns</li>
-<li>❌ Auto-fix</li>
-</ul>
-<a class="cta" href="https://buy.stripe.com/7sY9AMc1l6ZG5zm2b0fjG05">Start Free Trial</a>
-</div>
-<div class="plan">
-<h2>Auto</h2>
-<div class="price">$99<span class="period">/mo</span></div>
-<ul class="features">
-<li>✅ Everything in Pro</li>
-<li>✅ Automatic safe fixes</li>
-<li>✅ System mutation</li>
-<li>✅ Verified execution</li>
-<li>✅ Handrail integration</li>
-</ul>
-<a class="cta" href="https://buy.stripe.com/dRmdR20iDbfW7Hu2b0fjG07">Get Auto</a>
-</div>
-</div>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="section-label">The stack</div>
+  <div class="products-grid">
+
+    <!-- ROOT -->
+    <div class="product-card">
+      <div class="product-number">01 / ROOT</div>
+      <div class="product-name">ROOT</div>
+      <div class="product-tagline">State → Root cause → Fix.</div>
+      <p class="product-desc">
+        When something breaks, you run <code>root</code>. It reads your system state,
+        identifies the exact cause, and tells you how to fix it. Confidence scored.
+        Time estimated. Auto-fix available.
+      </p>
+      <ul class="proof-list">
+        <li>Instant root cause — not log noise</li>
+        <li>97%+ confidence scoring</li>
+        <li>Auto-fix execution (Pro/Auto)</li>
+        <li>curl install, zero config</li>
+      </ul>
+      <div class="price-row">
+        <span class="price-free">Free</span>
+        <span class="price-paid">· Pro <strong>$49</strong>/mo · Auto <strong>$99</strong>/mo</span>
+      </div>
+      <a href="https://root-jade-kappa.vercel.app" class="btn btn-primary">→ Get ROOT</a>
+    </div>
+
+    <!-- HANDRAIL -->
+    <div class="product-card">
+      <div class="product-number">02 / HANDRAIL</div>
+      <div class="product-name" style="color: #0088ff;">HANDRAIL</div>
+      <div class="product-tagline">Deterministic execution. Proven.</div>
+      <p class="product-desc">
+        Every operation logged. Every result proven. 1000/1000 identical outcomes
+        verified. Merkle-chained proof ledger. ABI rejection enforcement.
+        The execution layer you can trust absolutely.
+      </p>
+      <ul class="proof-list">
+        <li>1000/1000 determinism verified</li>
+        <li>Merkle proof ledger — immutable</li>
+        <li>Byte-identical replay</li>
+        <li>ABI rejection enforcement</li>
+      </ul>
+      <div class="price-row">
+        <span class="price-free">Free</span>
+        <span class="price-paid">· Pro <strong>$29</strong>/mo · Enterprise <strong>$299</strong>/mo</span>
+      </div>
+      <a href="https://axiolevruntime.vercel.app" class="btn btn-primary" style="background: #0088ff;">→ Get Handrail</a>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ARCHITECTURE -->
+<section class="architecture" id="architecture">
+  <div class="section-label">How they fit together</div>
+  <div class="arch-grid">
+    <div class="arch-diagram">
+      <div class="arch-layer arch-layer-user">
+        <span style="color: #888;">YOUR SYSTEM STATE</span>
+        <span style="color: #555; margin-left: auto;">broken env · port conflict · missing config</span>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer arch-layer-root">
+        <span style="color: var(--green); font-weight: 700;">ROOT</span>
+        <span style="color: #888;">diagnose → fix → confidence score</span>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer arch-layer-handrail">
+        <span style="color: #0088ff; font-weight: 700;">HANDRAIL</span>
+        <span style="color: #888;">execute fix → log proof → verify</span>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer arch-layer-user">
+        <span style="color: var(--green);">SYSTEM RESTORED</span>
+        <span style="color: #555; margin-left: auto;">cryptographic proof of every action</span>
+      </div>
+    </div>
+    <div class="arch-text">
+      <h3>Diagnosis meets execution.</h3>
+      <p>
+        ROOT tells you what's wrong and how to fix it.<br><br>
+        Handrail executes that fix deterministically — logged, proven, reproducible.<br><br>
+        Together they close the loop: from broken state to verified resolution
+        with zero ambiguity and cryptographic proof of every action taken.<br><br>
+        This is what debugging looks like when you stop guessing.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">zeroguess.dev <span>— by AXIOLEV Holdings LLC</span></div>
+  <ul class="footer-links">
+    <li><a href="https://root-jade-kappa.vercel.app">ROOT</a></li>
+    <li><a href="https://axiolevruntime.vercel.app">Handrail</a></li>
+    <li><a href="https://github.com/mkaxiolev-max">GitHub</a></li>
+  </ul>
+</footer>
+
 </body>
 </html>
