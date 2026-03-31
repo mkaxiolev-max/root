@@ -1,0 +1,9 @@
+{
+  "name": "root-landing",
+  "version": "1.0.0",
+  "description": "ROOT — Know exactly what's wrong. Instantly.",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}
