@@ -1,15 +1,31 @@
 // Stripe Webhook Handler — Vercel Serverless Function
 // Receives Stripe events → appends to Alexandria ledger (JSONL)
-// Event types handled: checkout.session.completed, payment_intent.succeeded
+// Verifies Stripe-Signature header using STRIPE_WEBHOOK_SECRET
 
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const crypto = require("crypto");
 
+const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
 const ALEXANDRIA_LEDGER = "/Volumes/NSExternal/ALEXANDRIA/ledger/stripe_events.jsonl";
 const NS_LEDGER_URL = process.env.NS_URL
   ? `${process.env.NS_URL}/receipts/stripe`
   : null;
+
+function verifyStripeSignature(rawBody, sigHeader, secret) {
+  if (!secret || !sigHeader) return !secret; // pass if no secret configured
+  try {
+    const parts = Object.fromEntries(sigHeader.split(",").map(p => p.split("=")));
+    const ts = parts.t;
+    const sig = parts.v1;
+    const payload = `${ts}.${rawBody}`;
+    const expected = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+    return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sig));
+  } catch (_) {
+    return false;
+  }
+}
 
 function appendToLedger(entry) {
   try {
@@ -48,6 +64,12 @@ module.exports = async function handler(req, res) {
 
   let rawBody = "";
   for await (const chunk of req) rawBody += chunk;
+
+  // Verify Stripe signature
+  const sigHeader = req.headers["stripe-signature"] || "";
+  if (WEBHOOK_SECRET && !verifyStripeSignature(rawBody, sigHeader, WEBHOOK_SECRET)) {
+    return res.status(400).json({ error: "invalid_signature" });
+  }
 
   let event;
   try {
